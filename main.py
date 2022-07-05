@@ -9,13 +9,8 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import time
 import urllib
-
 from urllib3 import NullHandler
 
-
-# url="https://google.com"
-
-# driver.get(url)
 
 def get_article_info(crawl_url, inform_list): # 헤드라인 뉴스 정보 수집 및 추가
     
@@ -120,8 +115,6 @@ def main():
     crawl_url=""
     sid1 = ""
     
-    
-    
     for i in range(100,5):
         sid1 = string(i)
         crawl_url = start_url + sid1
@@ -130,6 +123,11 @@ def main():
         
     #엑셀에 저장
     df = pd.DataFrame(inform_list)
+    
+    file_name = "news_crawling_infrom.xlsx"
+    df.to_excel(file_name)
+    
+    print("done")
     
     print(df)
     
