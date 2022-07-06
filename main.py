@@ -1,15 +1,16 @@
-from asyncio.windows_events import NULL
+# -*- coding: utf-8 -*-
+# from asyncio.windows_events import NULL
 from cgitb import text
-from http.client import SWITCHING_PROTOCOLS
-from lib2to3.pgen2 import driver
+# from http.client import SWITCHING_PROTOCOLS
+# from lib2to3.pgen2 import driver
 import string
-from unittest import result
+# from unittest import result
 from selenium import webdriver
 from bs4 import BeautifulSoup
 import pandas as pd
 import time
 import urllib
-from urllib3 import NullHandler
+# from urllib3 import NullHandler
 
 
 def get_article_info(crawl_url, inform_list): # 헤드라인 뉴스 정보 수집 및 추가
@@ -17,7 +18,7 @@ def get_article_info(crawl_url, inform_list): # 헤드라인 뉴스 정보 수�
     temp_result = [] #가져온 기사 정보 리스트 임시 저장
     head_line_list = [] #헤드라인 뉴스 리스트
     related_news_list = [] #관련 뉴스 더보기 링크 저장 
-    more_btn = NULL #헤드라인 뉴스 더보기 버튼 
+    more_btn = None #헤드라인 뉴스 더보기 버튼 
     
     driver= webdriver.Chrome()
     driver.get(crawl_url)
@@ -30,17 +31,17 @@ def get_article_info(crawl_url, inform_list): # 헤드라인 뉴스 정보 수�
     #more_btn 클릭
     driver.find_element_by_css_selector("#main_content > div > div._persist > div.cluster._news_cluster_more_layer > div > a").click()
     
-    if more_btn is not NULL:
+    if more_btn is not None:
         #head_line_list 찾기
         head_line_list = url_soup.select("#main_content > div > div._persist > div.cluster_foot > div > a")
         
         for news in head_line_list:
-            more_url = NULL #관련 뉴스 더보기 버튼에 있는 링크
+            more_url = None #관련 뉴스 더보기 버튼에 있는 링크
             
             #more_url 찾기
             more_url = news.get('href')
             
-            if more_url is not NULL:
+            if more_url is not None:
                 related_news_list.append(more_url)
             
             else: 
@@ -61,16 +62,16 @@ def get_article_info(crawl_url, inform_list): # 헤드라인 뉴스 정보 수�
         print("ERROR : 헤드라인 뉴스 더보기 버튼을 찾을 수 없습니다.")
         
     driver.close()
-    
+    print("get_article_info done")
 
 def get_detail_info(news_url): # 뉴스 상세정보 수집
     
     news_list = [] #뉴스 리스트 
     result_list = []
     
-    driver= webdriver.Chrome()
-    driver.get(news_url)
-    page_html = driver.page_source
+    driver2= webdriver.Chrome()
+    driver2.get(news_url)
+    page_html = driver2.page_source
     url_soup = BeautifulSoup(page_html, 'lxml')
     
     #news_list 찾기 #main_content > div:nth-child(2) > ul > li
@@ -105,7 +106,8 @@ def get_detail_info(news_url): # 뉴스 상세정보 수집
             
         result_list.append(temp_dict)
     
-    driver.close()
+    driver2.close()
+    print("get_detail_info done"+"news_url:"+ news_url)
     return result_list
 
 def main():
@@ -119,16 +121,20 @@ def main():
         sid1 = string(i)
         crawl_url = start_url + sid1
         
+        print(crawl_url)
+        
         get_article_info(crawl_url, inform_list)
         
     #엑셀에 저장
-    df = pd.DataFrame(inform_list)
+    # df = pd.DataFrame(inform_list)
     
-    file_name = "news_crawling_infrom.xlsx"
-    df.to_excel(file_name)
+    # file_name = "news_crawling_infrom.xlsx"
+    # df.to_excel(file_name)
     
-    print("done")
+    print("main done")
     
-    print(df)
+    #print(df)
     
     
+if __name__ == "__main__":
+            main()   
